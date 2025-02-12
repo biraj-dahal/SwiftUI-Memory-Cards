@@ -8,15 +8,21 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @State private var cards: [Card] = Card.mockedCards
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        ZStack{
+            
+            ForEach(0..<cards.count, id: \.self){ index in
+                CardView(card: cards[index])
+                    .rotationEffect(.degrees(Double(cards.count - 1 - index) * -5))
+            }
+            
         }
-        .padding()
+        
     }
+
 }
 
 #Preview {
