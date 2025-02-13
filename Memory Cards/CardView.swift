@@ -27,6 +27,7 @@ struct CardView: View {
     
     @State private var isShowingQuestion = true
     @State private var offset: CGSize = .zero
+    private let swipeThreshold: Double = 200
     
     var body: some View {
         ZStack
@@ -57,6 +58,7 @@ struct CardView: View {
         .onTapGesture {
             isShowingQuestion.toggle()
         }
+        .opacity(3 - abs(offset.width) / swipeThreshold * 3)
         .rotationEffect(.degrees(offset.width / 20.0))
         .offset(CGSize(width: offset.width, height: 0))
         .gesture(DragGesture()
@@ -66,6 +68,19 @@ struct CardView: View {
                 offset = translation
                 
             }
+            .onEnded { gesture in
+                    if gesture.translation.width > swipeThreshold {
+                        print("👉 Swiped right")
+
+                    } else if gesture.translation.width < -swipeThreshold {
+                        print("👈 Swiped left")
+
+                    } else {
+                        withAnimation(.bouncy) { 
+                            offset = .zero
+                        }
+                    }
+                }
                  )
     }
 }
