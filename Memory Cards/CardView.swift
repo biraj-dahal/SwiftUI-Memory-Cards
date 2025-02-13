@@ -26,6 +26,7 @@ struct CardView: View {
     let card: Card
     
     @State private var isShowingQuestion = true
+    @State private var offset: CGSize = .zero
     
     var body: some View {
         ZStack
@@ -33,9 +34,6 @@ struct CardView: View {
             RoundedRectangle(cornerRadius: 20)
                 .fill(isShowingQuestion ? Color.red : Color.green)
                 .shadow(color: .black, radius: 4, x: -10, y: 20)
-                .onTapGesture {
-                    isShowingQuestion.toggle()
-                }
             
             VStack(spacing:30){
                 
@@ -53,9 +51,22 @@ struct CardView: View {
             .foregroundStyle(.white)
             .bold()
             .padding(40)
-            
+
         }
         .frame(width: 350, height: 700)
+        .onTapGesture {
+            isShowingQuestion.toggle()
+        }
+        .rotationEffect(.degrees(offset.width / 20.0))
+        .offset(CGSize(width: offset.width, height: 0))
+        .gesture(DragGesture()
+            .onChanged { gesture in
+                let translation = gesture.translation
+                print(translation)
+                offset = translation
+                
+            }
+                 )
     }
 }
 
