@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Card{
+struct Card: Equatable{
     
     let question: String
     let answer: String
@@ -24,6 +24,8 @@ struct Card{
 struct CardView: View {
     
     let card: Card
+    var onSwipedLeft: (() -> Void)?
+    var onSwipedRight: (() -> Void)?
     
     @State private var isShowingQuestion = true
     @State private var offset: CGSize = .zero
@@ -70,10 +72,10 @@ struct CardView: View {
             }
             .onEnded { gesture in
                     if gesture.translation.width > swipeThreshold {
-                        print("👉 Swiped right")
+                        onSwipedRight?()
 
                     } else if gesture.translation.width < -swipeThreshold {
-                        print("👈 Swiped left")
+                        onSwipedLeft?()
 
                     } else {
                         withAnimation(.bouncy) { 
